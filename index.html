@@ -3,17 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Portfolio</title>
+  <title>Alex Developer | Portfolio</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: #4361ee;
+      --primary-light: #6b85f1;
+      --primary-dark: #2a4acb;
       --secondary-color: #3f37c9;
       --accent-color: #4cc9f0;
+      --accent-light: #7fd8f4;
+      --accent-dark: #2ab4e0;
       --dark-color: #1a1a2e;
+      --dark-light: #2d2d44;
       --light-color: #f8f9fa;
+      --light-dark: #e9ecef;
       --text-color: #333;
       --text-light: #6c757d;
+      --success-color: #4caf50;
+      --error-color: #f44336;
+      --warning-color: #ff9800;
+      --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      --gradient-accent: linear-gradient(135deg, var(--accent-color), var(--primary-light));
     }
     
     body {
@@ -25,6 +36,180 @@
       line-height: 1.6;
     }
 
+    /* Auth Modal Styles */
+    .auth-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .auth-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .auth-container {
+      background: white;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transform: translateY(-50px);
+      transition: transform 0.4s ease;
+      position: relative;
+    }
+
+    .auth-modal.active .auth-container {
+      transform: translateY(0);
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: color 0.3s ease;
+    }
+
+    .auth-close:hover {
+      color: var(--primary-color);
+    }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--light-dark);
+    }
+
+    .auth-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .auth-tab.active {
+      color: var(--primary-color);
+    }
+
+    .auth-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .auth-content {
+      display: none;
+    }
+
+    .auth-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .auth-form .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .auth-form input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--light-dark);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .auth-form input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      outline: none;
+    }
+
+    .auth-form .btn-auth {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--gradient-primary);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+
+    .auth-form .btn-auth:hover {
+      background: var(--gradient-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-light);
+    }
+
+    .auth-footer a {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .auth-footer a:hover {
+      color: var(--secondary-color);
+    }
+
+    .auth-message {
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .auth-message.success {
+      background-color: rgba(76, 175, 80, 0.1);
+      color: var(--success-color);
+      display: block;
+    }
+
+    .auth-message.error {
+      background-color: rgba(244, 67, 54, 0.1);
+      color: var(--error-color);
+      display: block;
+    }
+
+    /* Header/Navigation Styles */
     header {
       background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
       color: white;
@@ -46,11 +231,182 @@
       z-index: 0;
     }
 
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .navbar.visible {
+      transform: translateY(0);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--accent-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-color);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-nav {
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-login {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-login:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .btn-signup {
+      background-color: var(--accent-color);
+      color: var(--dark-color);
+    }
+
+    .btn-signup:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark-color);
+      font-weight: 600;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-name {
+      color: white;
+      font-weight: 500;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 200px;
+      padding: 0.5rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .user-profile:hover .user-dropdown {
+      opacity: 1;
+      visibility: visible;
+      top: 55px;
+    }
+
+    .dropdown-item {
+      padding: 0.75rem 1.5rem;
+      color: var(--text-color);
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--light-dark);
+      color: var(--primary-color);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background-color: var(--light-dark);
+      margin: 0.5rem 0;
+    }
+
     header .header-content {
       position: relative;
       z-index: 1;
       max-width: 800px;
       margin: 0 auto;
+      padding-top: 3rem;
     }
 
     header h1 {
@@ -67,7 +423,7 @@
 
     .btn {
       display: inline-block;
-      background-color: var(--accent-color);
+      background: var(--gradient-primary);
       color: white;
       padding: 0.8rem 1.5rem;
       border-radius: 50px;
@@ -76,10 +432,12 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       animation: fadeInUp 1s ease;
+      border: none;
+      cursor: pointer;
     }
 
     .btn:hover {
-      background-color: var(--primary-color);
+      background: var(--gradient-accent);
       transform: translateY(-3px);
       box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
@@ -118,6 +476,7 @@
       color: var(--primary-color);
       display: inline-block;
       margin-bottom: 1rem;
+      position: relative;
     }
 
     .section-title h2::after {
@@ -125,8 +484,8 @@
       position: absolute;
       width: 80px;
       height: 4px;
-      background-color: var(--accent-color);
-      bottom: 0;
+      background: var(--gradient-accent);
+      bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 2px;
@@ -135,7 +494,7 @@
     .section-title p {
       color: var(--text-light);
       max-width: 700px;
-      margin: 0 auto;
+      margin: 1rem auto 0;
     }
 
     .about-content {
@@ -154,30 +513,106 @@
       flex: 1;
       min-width: 300px;
       text-align: center;
+      position: relative;
+    }
+
+    .about-image::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid var(--accent-color);
+      border-radius: 10px;
+      top: 15px;
+      left: 15px;
+      z-index: -1;
+      transition: all 0.5s ease;
+    }
+
+    .about-image:hover::before {
+      top: 10px;
+      left: 10px;
     }
 
     .about-image img {
       max-width: 100%;
       border-radius: 10px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
     }
 
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .about-image:hover img {
+      transform: scale(1.03);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    /* Enhanced Skills Section */
+    .skills-container {
       margin-top: 2rem;
     }
 
-    .skill {
-      background-color: white;
-      padding: 0.5rem 1.2rem;
-      border-radius: 50px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-size: 0.9rem;
+    .skill-item {
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-name {
       font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .skill-percent {
       color: var(--primary-color);
-      border: 1px solid #e9ecef;
+      font-weight: 600;
+    }
+
+    .skill-bar {
+      height: 10px;
+      background-color: var(--light-dark);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: var(--gradient-accent);
+      border-radius: 5px;
+      width: 0;
+      transition: width 1.5s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-progress::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shine 2s infinite;
+    }
+
+    /* Animated skill bars */
+    @keyframes fillBar {
+      from { width: 0; }
+      to { width: var(--skill-level); }
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     .team-members {
@@ -192,6 +627,17 @@
       overflow: hidden;
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .team-member::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-primary);
     }
 
     .team-member:hover {
@@ -202,6 +648,23 @@
     .team-member-img {
       height: 250px;
       overflow: hidden;
+      position: relative;
+    }
+
+    .team-member-img::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .team-member:hover .team-member-img::after {
+      opacity: 1;
     }
 
     .team-member-img img {
@@ -244,6 +707,7 @@
 
     .team-member-social a:hover {
       color: var(--primary-color);
+      transform: translateY(-3px);
     }
 
     .portfolio-grid {
@@ -258,6 +722,11 @@
       overflow: hidden;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       height: 250px;
+      transition: all 0.3s ease;
+    }
+
+    .portfolio-item:hover {
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
 
     .portfolio-item img {
@@ -295,6 +764,24 @@
 
     .portfolio-overlay h3 {
       margin-bottom: 0.5rem;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .portfolio-overlay p {
+      transform: translateY(20px);
+      transition: transform 0.3s ease 0.1s;
+    }
+
+    .portfolio-overlay .btn {
+      transform: translateY(20px);
+      transition: transform 0.3s ease 0.2s;
+    }
+
+    .portfolio-item:hover .portfolio-overlay h3,
+    .portfolio-item:hover .portfolio-overlay p,
+    .portfolio-item:hover .portfolio-overlay .btn {
+      transform: translateY(0);
     }
 
     .video-container {
@@ -305,6 +792,13 @@
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       margin: 2rem 0;
+      transform: scale(0.98);
+      transition: transform 0.3s ease;
+    }
+
+    .video-container:hover {
+      transform: scale(1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
 
     .video-container iframe {
@@ -321,8 +815,16 @@
       margin: 0 auto;
       background: white;
       padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+
+    .contact-form.animated {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     .form-group {
@@ -333,20 +835,30 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
+      color: var(--dark-color);
     }
 
     .form-group input,
     .form-group textarea {
       width: 100%;
-      padding: 0.8rem;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      padding: 0.8rem 1rem;
+      border: 2px solid var(--light-dark);
+      border-radius: 8px;
       font-family: inherit;
       font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      outline: none;
     }
 
     .form-group textarea {
       min-height: 150px;
+      resize: vertical;
     }
 
     footer {
@@ -355,8 +867,31 @@
       text-align: center;
       padding: 2rem;
       margin-top: 3rem;
+      position: relative;
     }
 
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+
+    /* Floating animation for header elements */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* General animations */
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -384,6 +919,92 @@
       }
     }
 
+    /* Scroll reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Loading animation */
+    .loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(26, 26, 46, 0.9);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .loader.active {
+      display: flex;
+    }
+
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    .loader-text {
+      color: white;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--dark-color);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background-color: var(--success-color);
+    }
+
+    .toast.error {
+      background-color: var(--error-color);
+    }
+
+    .toast-icon {
+      font-size: 1.2rem;
+    }
+
     @media (max-width: 768px) {
       header h1 {
         font-size: 2rem;
@@ -396,14 +1017,130 @@
       .portfolio-grid {
         grid-template-columns: 1fr;
       }
+
+      .navbar {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .auth-container {
+        width: 95%;
+        padding: 1.5rem;
+      }
+
+      .auth-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Portfolio...</div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-icon"><i class="fas fa-check"></i></div>
+    <div class="toast-message">Action completed successfully!</div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal" id="authModal">
+    <div class="auth-container">
+      <span class="auth-close" id="authClose">&times;</span>
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="loginTab">Login</div>
+        <div class="auth-tab" id="signupTab">Sign Up</div>
+      </div>
+      
+      <div class="auth-message" id="authMessage"></div>
+      
+      <div class="auth-content active" id="loginContent">
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="btn-auth">Login</button>
+        </form>
+        <div class="auth-footer">
+          Don't have an account? <a href="#" id="switchToSignup">Sign up</a>
+        </div>
+      </div>
+      
+      <div class="auth-content" id="signupContent">
+        <form class="auth-form" id="signupForm">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" required>
+          </div>
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input type="email" id="signupEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="signupConfirm">Confirm Password</label>
+            <input type="password" id="signupConfirm" required>
+          </div>
+          <button type="submit" class="btn-auth">Create Account</button>
+        </form>
+        <div class="auth-footer">
+          Already have an account? <a href="#" id="switchToLogin">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="logo">Alex<span>Dev</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#portfolio">Work</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="auth-buttons" id="authButtons">
+      <a href="#" class="btn-nav btn-login" id="openLogin">Login</a>
+      <a href="#" class="btn-nav btn-signup" id="openSignup">Sign Up</a>
+    </div>
+    <div class="user-profile" id="userProfile" style="display: none;">
+      <div class="user-avatar" id="userAvatar">A</div>
+      <span class="user-name" id="userName">Alex</span>
+      <div class="user-dropdown">
+        <a href="#" class="dropdown-item"><i class="fas fa-user"></i> Profile</a>
+        <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+  </nav>
+
   <header>
     <div class="header-content">
-      <h1>Hi, I'm Redoyan Hossen </h1>
-      <p>Graphic Designer, Motion Video, 3d modeler & UI/UX Designer</p>
+      <h1 class="floating">Hi, I'm Alex Developer</h1>
+      <p>Full Stack Developer & UI/UX Designer</p>
       <a href="#contact" class="btn">Get In Touch</a>
       <div class="social-links">
         <a href="https://github.com/your-username" target="_blank"><i class="fab fa-github"></i></a>
@@ -423,18 +1160,60 @@
       <div class="about-text">
         <p>Hello! I'm a passionate developer and designer with over 5 years of experience building web and mobile applications. I specialize in creating intuitive user interfaces and robust backend systems.</p>
         <p>My approach combines technical expertise with design thinking to deliver solutions that are both visually appealing and highly functional. I believe in clean code, pixel-perfect designs, and seamless user experiences.</p>
-        <div class="skills">
-          <span class="skill">JavaScript</span>
-          <span class="skill">React</span>
-          <span class="skill">Node.js</span>
-          <span class="skill">UI/UX Design</span>
-          <span class="skill">Figma</span>
-          <span class="skill">CSS/SASS</span>
-          <span class="skill">MongoDB</span>
-          <span class="skill">Git</span>
+        
+        <div class="skills-container">
+          <div class="skill-item reveal">
+            <div class="skill-info">
+              <span class="skill-name">JavaScript</span>
+              <span class="skill-percent">95%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="--skill-level: 95%"></div>
+            </div>
+          </div>
+          
+          <div class="skill-item reveal">
+            <div class="skill-info">
+              <span class="skill-name">React</span>
+              <span class="skill-percent">90%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="--skill-level: 90%"></div>
+            </div>
+          </div>
+          
+          <div class="skill-item reveal">
+            <div class="skill-info">
+              <span class="skill-name">Node.js</span>
+              <span class="skill-percent">85%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="--skill-level: 85%"></div>
+            </div>
+          </div>
+          
+          <div class="skill-item reveal">
+            <div class="skill-info">
+              <span class="skill-name">UI/UX Design</span>
+              <span class="skill-percent">88%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="--skill-level: 88%"></div>
+            </div>
+          </div>
+          
+          <div class="skill-item reveal">
+            <div class="skill-info">
+              <span class="skill-name">CSS/SASS</span>
+              <span class="skill-percent">92%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-progress" style="--skill-level: 92%"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="about-image">
+      <div class="about-image reveal">
         <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Developer working">
       </div>
     </div>
@@ -446,7 +1225,7 @@
       <p>Here are some of my recent projects</p>
     </div>
     <div class="portfolio-grid">
-      <div class="portfolio-item">
+      <div class="portfolio-item reveal">
         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Project 1">
         <div class="portfolio-overlay">
           <h3>E-commerce Platform</h3>
@@ -454,7 +1233,7 @@
           <a href="#" class="btn" style="margin-top: 1rem;">View Project</a>
         </div>
       </div>
-      <div class="portfolio-item">
+      <div class="portfolio-item reveal">
         <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Project 2">
         <div class="portfolio-overlay">
           <h3>Task Management App</h3>
@@ -462,7 +1241,7 @@
           <a href="#" class="btn" style="margin-top: 1rem;">View Project</a>
         </div>
       </div>
-      <div class="portfolio-item">
+      <div class="portfolio-item reveal">
         <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Project 3">
         <div class="portfolio-overlay">
           <h3>Health & Wellness App</h3>
@@ -478,7 +1257,7 @@
       <h2>Project Demo</h2>
       <p>Watch a quick demo of my latest project</p>
     </div>
-    <div class="video-container">
+    <div class="video-container reveal">
       <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </section>
@@ -489,7 +1268,7 @@
       <p>The talented people I collaborate with</p>
     </div>
     <div class="team-members">
-      <div class="team-member">
+      <div class="team-member reveal">
         <div class="team-member-img">
           <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jane Doe">
         </div>
@@ -504,7 +1283,7 @@
         </div>
       </div>
 
-      <div class="team-member">
+      <div class="team-member reveal">
         <div class="team-member-img">
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="John Smith">
         </div>
@@ -519,7 +1298,7 @@
         </div>
       </div>
 
-      <div class="team-member">
+      <div class="team-member reveal">
         <div class="team-member-img">
           <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sarah Johnson">
         </div>
@@ -541,19 +1320,19 @@
       <h2>Get In Touch</h2>
       <p>Have a project in mind? Let's talk about it</p>
     </div>
-    <div class="contact-form">
-      <form>
+    <div class="contact-form" id="contactForm">
+      <form id="contactFormElement">
         <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" required>
+          <label for="contactName">Name</label>
+          <input type="text" id="contactName" required>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" required>
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" required>
         </div>
         <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" required></textarea>
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" required></textarea>
         </div>
         <button type="submit" class="btn">Send Message</button>
       </form>
@@ -569,5 +1348,293 @@
       <a href="#"><i class="fab fa-dribbble"></i></a>
     </div>
   </footer>
+
+  <script>
+    // Simulate server-side user management
+    const server = {
+      users: [
+        {
+          id: 1,
+          name: "Alex Developer",
+          email: "alex@example.com",
+          password: "password123",
+          avatar: "A"
+        }
+      ],
+      currentUser: null,
+      
+      login(email, password) {
+        const user = this.users.find(u => u.email === email && u.password === password);
+        if (user) {
+          this.currentUser = user;
+          return { success: true, user };
+        }
+        return { success: false, message: "Invalid email or password" };
+      },
+      
+      signup(name, email, password) {
+        if (this.users.some(u => u.email === email)) {
+          return { success: false, message: "Email already exists" };
+        }
+        
+        const newUser = {
+          id: this.users.length + 1,
+          name,
+          email,
+          password,
+          avatar: name.charAt(0).toUpperCase()
+        };
+        
+        this.users.push(newUser);
+        this.currentUser = newUser;
+        return { success: true, user: newUser };
+      },
+      
+      logout() {
+        this.currentUser = null;
+        return { success: true };
+      },
+      
+      saveContactForm(data) {
+        // In a real app, this would save to a database
+        console.log("Contact form submitted:", data);
+        return { success: true, message: "Message sent successfully!" };
+      }
+    };
+
+    // DOM Elements
+    const loader = document.getElementById('loader');
+    const toast = document.getElementById('toast');
+    const authModal = document.getElementById('authModal');
+    const authClose = document.getElementById('authClose');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginContent = document.getElementById('loginContent');
+    const signupContent = document.getElementById('signupContent');
+    const switchToSignup = document.getElementById('switchToSignup');
+    const switchToLogin = document.getElementById('switchToLogin');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const authMessage = document.getElementById('authMessage');
+    const openLogin = document.getElementById('openLogin');
+    const openSignup = document.getElementById('openSignup');
+    const authButtons = document.getElementById('authButtons');
+    const userProfile = document.getElementById('userProfile');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const navbar = document.getElementById('navbar');
+    const contactFormElement = document.getElementById('contactFormElement');
+
+    // Show loading screen initially
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        loader.classList.remove('active');
+        
+        // Check if user is already logged in (from previous session)
+        if (server.currentUser) {
+          updateAuthUI(server.currentUser);
+        }
+      }, 1500);
+    });
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toastIcon = toast.querySelector('.toast-icon');
+      const toastMessage = toast.querySelector('.toast-message');
+      
+      toast.className = 'toast';
+      toast.classList.add(type);
+      toastMessage.textContent = message;
+      
+      if (type === 'success') {
+        toastIcon.innerHTML = '<i class="fas fa-check"></i>';
+      } else {
+        toastIcon.innerHTML = '<i class="fas fa-exclamation"></i>';
+      }
+      
+      toast.classList.add('visible');
+      
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3000);
+    }
+
+    // Update auth UI based on login state
+    function updateAuthUI(user) {
+      if (user) {
+        authButtons.style.display = 'none';
+        userProfile.style.display = 'flex';
+        userName.textContent = user.name;
+        userAvatar.textContent = user.avatar;
+        showToast(`Welcome back, ${user.name}!`);
+      } else {
+        authButtons.style.display = 'flex';
+        userProfile.style.display = 'none';
+      }
+    }
+
+    // Auth modal functionality
+    openLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      authModal.classList.add('active');
+      loginTab.click();
+    });
+
+    openSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      authModal.classList.add('active');
+      signupTab.click();
+    });
+
+    authClose.addEventListener('click', () => {
+      authModal.classList.remove('active');
+      authMessage.style.display = 'none';
+    });
+
+    loginTab.addEventListener('click', () => {
+      loginTab.classList.add('active');
+      signupTab.classList.remove('active');
+      loginContent.classList.add('active');
+      signupContent.classList.remove('active');
+      authMessage.style.display = 'none';
+    });
+
+    signupTab.addEventListener('click', () => {
+      signupTab.classList.add('active');
+      loginTab.classList.remove('active');
+      signupContent.classList.add('active');
+      loginContent.classList.remove('active');
+      authMessage.style.display = 'none';
+    });
+
+    switchToSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      signupTab.click();
+    });
+
+    switchToLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginTab.click();
+    });
+
+    // Form submissions
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const result = server.login(email, password);
+      if (result.success) {
+        updateAuthUI(result.user);
+        authModal.classList.remove('active');
+        loginForm.reset();
+      } else {
+        authMessage.textContent = result.message;
+        authMessage.className = 'auth-message error';
+        authMessage.style.display = 'block';
+      }
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+      
+      if (password !== confirm) {
+        authMessage.textContent = "Passwords don't match";
+        authMessage.className = 'auth-message error';
+        authMessage.style.display = 'block';
+        return;
+      }
+      
+      const result = server.signup(name, email, password);
+      if (result.success) {
+        updateAuthUI(result.user);
+        authModal.classList.remove('active');
+        signupForm.reset();
+      } else {
+        authMessage.textContent = result.message;
+        authMessage.className = 'auth-message error';
+        authMessage.style.display = 'block';
+      }
+    });
+
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      server.logout();
+      updateAuthUI(null);
+      showToast('Logged out successfully');
+    });
+
+    contactFormElement.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contactName').value;
+      const email = document.getElementById('contactEmail').value;
+      const message = document.getElementById('contactMessage').value;
+      
+      const result = server.saveContactForm({ name, email, message });
+      if (result.success) {
+        showToast(result.message);
+        contactFormElement.reset();
+      } else {
+        showToast(result.message, 'error');
+      }
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        navbar.classList.add('visible');
+      } else {
+        navbar.classList.remove('visible');
+      }
+    });
+
+    // Animate skill bars on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animate contact form
+      const contactForm = document.getElementById('contactForm');
+      setTimeout(() => {
+        contactForm.classList.add('animated');
+      }, 300);
+      
+      // Scroll reveal animation
+      const revealElements = document.querySelectorAll('.reveal');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            
+            // Animate skill bars
+            if (entry.target.classList.contains('skill-item')) {
+              const skillProgress = entry.target.querySelector('.skill-progress');
+              skillProgress.style.animation = 'fillBar 1.5s ease-out forwards';
+            }
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+      
+      revealElements.forEach(element => {
+        observer.observe(element);
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>
